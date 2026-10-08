@@ -647,19 +647,3 @@ adb install -r build/app/outputs/flutter-apk/app-debug.apk
 3. **Android Platform Primary**: The application is tested and optimized specifically for Android devices in portrait mode. iOS build configurations require standard Apple Developer provisioning.
 
 ---
-
-## 🎓 Academic Project Information
-
-- **Project Title**: *Think Rush: A Real-Time Multiplayer Competitive Brain Battle Game*
-- **Degree**: Master of Computer Applications (MCA)
-- **Student Name**: Akaash Ravi Bhandary
-- **University Seat Number (USN)**: `4JK25MC005`
-- **Institution**: A.J. Institute of Engineering and Technology (AJIET), Mangaluru
-- **Department**: Department of Master of Computer Applications
-- **Project Mentor / Guide**: Mrs. Amitha Roshan Vakil
-
----
-
-## 📄 License
-
-This project is developed as an academic MCA project. Released under the [MIT License](LICENSE).
