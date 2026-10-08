@@ -5,7 +5,7 @@
 [![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev)
 [![Firebase](https://img.shields.io/badge/Firebase-Auth%20%7C%20Firestore-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com)
 [![Platform](https://img.shields.io/badge/Platform-Android%20(Portrait)-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://developer.android.com)
-[![Tests](https://img.shields.io/badge/Tests-17%20Passing-brightgreen?style=for-the-badge&logo=checkmarx&logoColor=white)](test/)
+[![Tests](https://img.shields.io/badge/Tests-21%20Passing-brightgreen?style=for-the-badge&logo=checkmarx&logoColor=white)](test/)
 [![License](https://img.shields.io/badge/License-Academic%20%2F%20MIT-blue?style=for-the-badge)](LICENSE)
 
 ---
@@ -562,12 +562,13 @@ flutter analyze
 ```bash
 flutter test
 ```
-*Expected Result: `17/17 tests passed`.*
+*Expected Result: `21/21 tests passed`.*
 
 ### Test Suite Summary
 | Test File | Target | Coverage Highlights |
 | :--- | :--- | :--- |
 | `ai_opponent_service_test.dart` | `AiOpponentService` | Verifies bot name pools, async thinking simulation, and score state. |
+| `auth_service_test.dart` | `AuthService` & `AuthProvider` | Verifies persistent sessions, cold-boot auto-login, and sign-out cleanup. |
 | `game_timer_service_test.dart` | `GameTimerService` | Validates 60s countdown, -3s wrong-answer deduction, and zero clamp. |
 | `leaderboard_service_test.dart` | `LeaderboardService` | Verifies sorting by score, win counts, and current user inclusion. |
 | `logic_grid_generator_test.dart` | `LogicGridGenerator` | Tests procedural logic deductions, 4 distinct options, valid index. |
@@ -647,3 +648,4 @@ adb install -r build/app/outputs/flutter-apk/app-debug.apk
 3. **Android Platform Primary**: The application is tested and optimized specifically for Android devices in portrait mode. iOS build configurations require standard Apple Developer provisioning.
 
 ---
+

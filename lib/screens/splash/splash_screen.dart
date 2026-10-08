@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_constants.dart';
+import '../../models/user_profile.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/player_provider.dart';
 import '../auth/login_screen.dart';
@@ -19,7 +20,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   late AnimationController _animController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
-  Timer? _navTimer;
 
   @override
   void initState() {
@@ -39,19 +39,28 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     _animController.forward();
 
-    _navTimer = Timer(const Duration(milliseconds: 1800), _checkAuthAndNavigate);
+    _checkAuthAndNavigate();
   }
 
-  void _checkAuthAndNavigate() async {
-    if (!mounted) return;
+  Future<void> _checkAuthAndNavigate() async {
     final auth = context.read<AuthProvider>();
     final player = context.read<PlayerProvider>();
 
-    if (auth.isAuthenticated && auth.currentUser != null) {
+    final results = await Future.wait([
+      auth.checkSession(),
+      Future.delayed(const Duration(milliseconds: 1500)),
+    ]);
+
+    if (!mounted) return;
+
+    final restoredUser = results.first as UserProfile?;
+
+    if (restoredUser != null || (auth.isAuthenticated && auth.currentUser != null)) {
+      final activeUser = restoredUser ?? auth.currentUser!;
       await player.loadProfile(
-        auth.currentUser!.id,
-        defaultName: auth.currentUser!.displayName,
-        defaultEmail: auth.currentUser!.email,
+        activeUser.id,
+        defaultName: activeUser.displayName,
+        defaultEmail: activeUser.email,
       );
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
@@ -66,7 +75,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   @override
   void dispose() {
-    _navTimer?.cancel();
     _animController.dispose();
     super.dispose();
   }

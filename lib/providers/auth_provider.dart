@@ -10,16 +10,28 @@ class AuthProvider extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
 
+  bool _isInitialized = false;
+
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
+  bool get isInitialized => _isInitialized;
+
+  Future<UserProfile?>? _sessionFuture;
 
   AuthProvider() {
-    _initSession();
+    checkSession();
   }
 
-  Future<void> _initSession() async {
-    await _authService.checkCurrentSession();
-    notifyListeners();
+  Future<UserProfile?> checkSession() {
+    if (_isInitialized && _authService.currentUser != null) {
+      return Future.value(_authService.currentUser);
+    }
+    _sessionFuture ??= _authService.checkCurrentSession().then((user) {
+      _isInitialized = true;
+      notifyListeners();
+      return user;
+    });
+    return _sessionFuture!;
   }
 
   Future<bool> signInWithEmail(String email, String password) async {
@@ -33,7 +45,10 @@ class AuthProvider extends ChangeNotifier {
     );
 
     _isLoading = false;
-    if (!result.success) {
+    _isInitialized = true;
+    if (result.success) {
+      _sessionFuture = Future.value(result.user);
+    } else {
       _errorMessage = result.errorMessage ?? 'Failed to sign in.';
     }
     notifyListeners();
@@ -52,7 +67,10 @@ class AuthProvider extends ChangeNotifier {
     );
 
     _isLoading = false;
-    if (!result.success) {
+    _isInitialized = true;
+    if (result.success) {
+      _sessionFuture = Future.value(result.user);
+    } else {
       _errorMessage = result.errorMessage ?? 'Failed to create account.';
     }
     notifyListeners();
@@ -66,7 +84,10 @@ class AuthProvider extends ChangeNotifier {
 
     final result = await _authService.signInAsGuest();
     _isLoading = false;
-    if (!result.success) {
+    _isInitialized = true;
+    if (result.success) {
+      _sessionFuture = Future.value(result.user);
+    } else {
       _errorMessage = result.errorMessage ?? 'Failed to sign in as guest.';
     }
     notifyListeners();
@@ -90,6 +111,8 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> signOut() async {
     await _authService.signOut();
+    _sessionFuture = Future.value(null);
+    _isInitialized = true;
     notifyListeners();
   }
 

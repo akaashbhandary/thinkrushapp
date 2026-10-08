@@ -21,6 +21,32 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscurePassword = true;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAlreadyAuthenticated();
+    });
+  }
+
+  Future<void> _checkAlreadyAuthenticated() async {
+    if (!mounted) return;
+    final auth = context.read<AuthProvider>();
+    if (auth.isAuthenticated && auth.currentUser != null) {
+      final player = context.read<PlayerProvider>();
+      final user = auth.currentUser!;
+      await player.loadProfile(
+        user.id,
+        defaultName: user.displayName,
+        defaultEmail: user.email,
+      );
+      if (!mounted) return;
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
+    }
+  }
+
+  @override
   void dispose() {
     _emailCtrl.dispose();
     _passwordCtrl.dispose();

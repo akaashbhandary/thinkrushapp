@@ -26,32 +26,30 @@ class AuthService {
   Future<UserProfile?> checkCurrentSession() async {
     final prefs = await SharedPreferences.getInstance();
 
-    if (FirebaseConfig.isFirebaseAvailable) {
-      final fbUser = fb.FirebaseAuth.instance.currentUser;
-      if (fbUser != null) {
-        final cached = prefs.getString(_sessionUserKey);
-        if (cached != null) {
-          _currentUser = UserProfile.fromJson(jsonDecode(cached));
-          return _currentUser;
-        }
-        _currentUser = UserProfile.initial(
-          id: fbUser.uid,
-          email: fbUser.email ?? 'player@thinkrush.com',
-          displayName: fbUser.displayName ?? 'Player',
-        );
-        return _currentUser;
-      }
-    }
-
     final cached = prefs.getString(_sessionUserKey);
     if (cached != null) {
       try {
         _currentUser = UserProfile.fromJson(jsonDecode(cached));
         return _currentUser;
       } catch (e) {
-        debugPrint('[AuthService] Error restoring session: $e');
+        debugPrint('[AuthService] Error restoring session from cache: $e');
       }
     }
+
+    if (FirebaseConfig.isFirebaseAvailable) {
+      final fbUser = fb.FirebaseAuth.instance.currentUser;
+      if (fbUser != null) {
+        final profile = UserProfile.initial(
+          id: fbUser.uid,
+          email: fbUser.email ?? 'player@thinkrush.com',
+          displayName: fbUser.displayName ?? 'Player',
+        );
+        _currentUser = profile;
+        await prefs.setString(_sessionUserKey, jsonEncode(profile.toJson()));
+        return _currentUser;
+      }
+    }
+
     _currentUser = null;
     return null;
   }
