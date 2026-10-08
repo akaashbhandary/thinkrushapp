@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "421753875230",
+    "project_id": "think-rush-d192f",
+    "storage_bucket": "think-rush-d192f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421753875230:android:37f141b49dec78a286370f",
+        "android_client_info": {
+          "package_name": "com.example.think_rush"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtWxjQBREpG49KGvLfThO3wPUDnQ_CCUI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
